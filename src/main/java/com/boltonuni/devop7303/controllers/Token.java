@@ -1,6 +1,5 @@
 package com.boltonuni.devop7303.controllers;
 
-import com.boltonuni.devop7303.entity.User;
 import com.boltonuni.devop7303.models.LoginRequest;
 import com.boltonuni.devop7303.models.Response;
 import com.boltonuni.devop7303.security.JwtTokenUtil;
@@ -23,8 +22,8 @@ import java.util.Objects;
 @RestController
 @CrossOrigin
 @RequestMapping("/v1/api/")
-public class Login {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Login.class);
+public class Token {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Token.class);
     @Autowired
     private AuthenticationManager authMan;
     @Autowired

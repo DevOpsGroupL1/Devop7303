@@ -1,33 +1,43 @@
 package com.boltonuni.devop7303.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
 @Entity
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "id", nullable = false, unique = true)
+    private String id;
+    @NotBlank(message = "First Name is required")
     private String fName;
     private String mName;
+    @NotBlank(message = "Last Name is required")
     private String lName;
+    @NotBlank(message = "Email is required")
+    @Column(unique = true)
     private String email;
     private String password;
     private boolean isActive;
+    @JsonIgnore
+    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalDateTime dateCreated;
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private UserDetail userDetail;
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private DoctorDetail doctorDetail;
     @Transient
     private Role userRole;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

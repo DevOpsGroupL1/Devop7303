@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +14,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String roleName;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalDateTime dateCreated;
 
     public void setId(Integer id) {
