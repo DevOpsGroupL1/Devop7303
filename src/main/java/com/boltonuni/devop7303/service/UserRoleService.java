@@ -33,4 +33,8 @@ public class UserRoleService {
         roleToUser.setRoleId(role.getId());
         return userRoleRepo.save(roleToUser);
     }
+
+    public Role getRole(int roleId){
+        return roleRepo.findById(roleId).orElse(null);
+    }
 }
