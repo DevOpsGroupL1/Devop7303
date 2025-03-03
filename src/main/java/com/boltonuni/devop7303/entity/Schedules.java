@@ -19,8 +19,14 @@ public class Schedules {
     private User user;
 
     @Transient
-//    @NotNull(message = "User ID required")
     private String userId;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "doctor_id", nullable = false, referencedColumnName = "id")
+    private User doctor;
+
+    @Transient
+    private String doctorId;
 
     @NotBlank(message = "Drug name required")
     private String drugName;
@@ -71,6 +77,22 @@ public class Schedules {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public User getDoctor() {
+        return doctor;
+    }
+
+    public void setDoctor(User doctor) {
+        this.doctor = doctor;
+    }
+
+    public String getDoctorId() {
+        return doctorId;
+    }
+
+    public void setDoctorId(String doctorId) {
+        this.doctorId = doctorId;
     }
 
     public String getDrugName() {
@@ -151,6 +173,8 @@ public class Schedules {
                 "id=" + id +
                 ", user=" + user +
                 ", userId='" + userId + '\'' +
+                ", doctor='" + doctor + '\'' +
+                ", doctorId='" + doctorId + '\'' +
                 ", drugName='" + drugName + '\'' +
                 ", description='" + description + '\'' +
                 ", prescription='" + prescription + '\'' +

@@ -28,9 +28,13 @@ public class ScheduleService {
     public Response saveSchedule(Schedules schedules){
         try{
             User user = userService.findById(schedules.getUserId());
+            System.out.println("Doctor user"+user.toString());
             if(user==null)
                 return new Response("Failed", "00", "Account not found");
             schedules.setUser(user);
+            User doctor = userService.findById(schedules.getDoctorId());
+            System.out.println("Doctor doctor"+doctor.toString());
+            schedules.setDoctor(doctor);
 
             UUID id = UUID.randomUUID();
             schedules.setId(id.toString());
@@ -54,5 +58,11 @@ public class ScheduleService {
             return new Response("Error", "99", "Operation failed");
         }
 
+    }
+
+    public Response getLast10Schedule(String userId) {;
+
+       List<Schedules> schedules = schedulesRepo.findLast10SchedulesByUserId(userId);
+       return new Response("success","00", schedules);
     }
 }

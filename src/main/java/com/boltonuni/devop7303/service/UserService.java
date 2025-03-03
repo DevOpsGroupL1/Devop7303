@@ -105,4 +105,14 @@ public class UserService {
             return new Response("User does not exist", "99",null);
         }
     }
+
+//    public Response getLast10Schedule(String email) {
+//        try{
+//            return scheduleService.getLast10Schedule(email);
+//
+//        }catch (Throwable th){
+//            LOGGER.debug("getLast10Schedule", th);
+//            return new Response("Operation failed","99", th.getMessage());
+//        }
+//    }
 }

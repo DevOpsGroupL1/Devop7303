@@ -1,5 +1,6 @@
 package com.boltonuni.devop7303.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -10,8 +11,9 @@ public class DoctorDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String specialization;
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "userId", nullable = false, referencedColumnName = "id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
@@ -44,7 +46,6 @@ public class DoctorDetail {
         return "DoctorDetail{" +
                 "id=" + id +
                 ", specialization='" + specialization + '\'' +
-                ", user=" + user +
                 '}';
     }
 }
