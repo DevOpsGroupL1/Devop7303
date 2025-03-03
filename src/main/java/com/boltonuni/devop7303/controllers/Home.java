@@ -1,9 +1,13 @@
 package com.boltonuni.devop7303.controllers;
 
+import com.boltonuni.devop7303.entity.Role;
 import com.boltonuni.devop7303.entity.Schedules;
 import com.boltonuni.devop7303.entity.User;
+import com.boltonuni.devop7303.entity.UserRole;
 import com.boltonuni.devop7303.models.Response;
+import com.boltonuni.devop7303.service.RoleService;
 import com.boltonuni.devop7303.service.ScheduleService;
+import com.boltonuni.devop7303.service.UserRoleService;
 import com.boltonuni.devop7303.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,6 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping(value = "/v1/api/")
@@ -25,6 +30,10 @@ public class Home {
     private UserService userService;
     @Autowired
     private ScheduleService scheduleService;
+    @Autowired
+    private UserRoleService userRoleService;
+    @Autowired
+    private RoleService roleService;
 
     //This is to retrieve all Patients to the doctor.
     @Operation(summary = "Get Active users")
@@ -65,8 +74,8 @@ public class Home {
 
 
     //Get Last Patients' prescriptions
-//    @PreAuthorize("hasAuthority('USER')")
-    @Operation(summary = "Get Last Patients' prescriptions")
+//    @PreAuthorize("hasAnyAuthority('USER', 'DOCTOR')")
+    @Operation(summary = "Get Last Prescriptions base on Role")
     @ApiResponses(value =
             {@ApiResponse(
                     responseCode = "00",
@@ -75,12 +84,39 @@ public class Home {
                             mediaType = "application/json",
                             schema = @Schema(implementation = User.class)
                     ) }), @ApiResponse(responseCode = "99", description = "Error Occurred",content = @Content) })
-    @GetMapping(value = "patient/dashboard")
+    @GetMapping(value = "dashboard")
     public Response patientDashboard(Principal principal){
         User user = userService.findByEmail(principal.getName());
         if(user==null)
             return new Response("Account does not exist", "99",null);
-        return scheduleService.getLast10Schedule(user.getId());
+        UserRole userAppRole = userRoleService.findByUserId(user.getId());
+        if(userAppRole==null){
+            return new Response("Success", "00", new ArrayList<>());
+        }
+        Role userRole = roleService.findRoleById(userAppRole.getRoleId());
+        if(userRole==null){
+            return new Response("Success", "00", new ArrayList<>());
+        }
+
+        if(userRole.getRoleName().equalsIgnoreCase("user")) {
+            System.out.println("Entered user");
+            return scheduleService.getLast10Schedule(user.getId());
+        }
+
+        if(userRole.getRoleName().equalsIgnoreCase("doctor")) {
+            System.out.println("Entered doctor");
+            return scheduleService.getLast50Schedule(user.getId());
+        }
+        return new Response("Success", "00", new ArrayList<>());
     }
+
+    @PreAuthorize("hasAuthority('USER')")
+    @PutMapping(value="dosage/{dosageId}/schedule/{schedId}")
+    public Response tickDosage(@PathVariable int dosageId, @PathVariable String schedId){
+        System.out.println("Dosage: "+dosageId);
+        System.out.println("Schedule: "+schedId);
+        return scheduleService.updateDosageIntake(dosageId, schedId);
+    }
+
 
 }
