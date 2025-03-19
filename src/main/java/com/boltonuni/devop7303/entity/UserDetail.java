@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Entity
 public class UserDetail {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", nullable = false)

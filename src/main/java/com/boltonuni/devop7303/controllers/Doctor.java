@@ -1,7 +1,9 @@
 package com.boltonuni.devop7303.controllers;
 
+
 import com.boltonuni.devop7303.entity.User;
 import com.boltonuni.devop7303.models.Response;
+import com.boltonuni.devop7303.service.DoctorService;
 import com.boltonuni.devop7303.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,9 +17,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin
 @RequestMapping("v1/api/")
-public class Authentication {
+public class Doctor {
     @Autowired
-    private UserService userService;
+    private DoctorService doctorService;
 
     @Operation(summary = "Register a patient")
     @ApiResponses(value =
@@ -28,27 +30,8 @@ public class Authentication {
                             mediaType = "application/json",
                             schema = @Schema(implementation = User.class)
                     ) }), @ApiResponse(responseCode = "99", description = "Error Occurred",content = @Content) })
-    @PostMapping(value = "user-register")
-    public Response userRegistration(@RequestBody @Valid User user){
-        return userService.userRegistration(user);
+    @PostMapping(value = "doctor-register")
+    public Response doctorRegistration(@RequestBody @Valid User user){
+        return doctorService.doctorRegistration(user);
     }
-
-    @Operation(summary = "Activate registration")
-    @ApiResponses(value =
-            {@ApiResponse(
-                    responseCode = "00",
-                    description = "Success",
-                    content = { @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = User.class)
-                    ) }), @ApiResponse(responseCode = "99", description = "Error Occurred",content = @Content) })
-    @PutMapping(value="activate-register/{userId}")
-    public Response activateRegistrataion(@PathVariable String userId){
-        System.out.println("Hello................");
-        if(userId==null || userId.equals("")){
-            return new Response("User not found","99", null);
-        }
-        return userService.activateRegister(userId);
-    }
-
 }

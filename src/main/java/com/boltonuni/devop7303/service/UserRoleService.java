@@ -8,6 +8,7 @@ import com.boltonuni.devop7303.repository.UserRoleRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -15,7 +16,7 @@ public class UserRoleService {
     @Autowired
     private UserRoleRepo userRoleRepo;
     @Autowired
-    RoleRepo roleRepo;
+    RoleService roleRepo;
     public UserRole findByRoleId(int id){
         return userRoleRepo.findById(id).orElse(null);
     }
@@ -25,12 +26,28 @@ public class UserRoleService {
     }
 
     public UserRole saveUserRole(User user){
-        Role role = roleRepo.findByRoleName("USER");
+        Role role = roleRepo.findRoleByName("USER");
         System.out.println("Role...........");
         System.out.println(role);
         UserRole roleToUser = new UserRole();
         roleToUser.setUserId(user.getId());
         roleToUser.setRoleId(role.getId());
+        roleToUser.setDateCreated(LocalDateTime.now());
         return userRoleRepo.save(roleToUser);
+    }
+
+    public UserRole saveDoctorRole(User user){
+        Role role = roleRepo.findRoleByName("DOCTOR");
+        System.out.println("Role...........");
+        System.out.println(role);
+        UserRole roleToUser = new UserRole();
+        roleToUser.setUserId(user.getId());
+        roleToUser.setRoleId(role.getId());
+        roleToUser.setDateCreated(LocalDateTime.now());
+        return userRoleRepo.save(roleToUser);
+    }
+
+    public Role getRole(int roleId){
+        return roleRepo.findRoleById(roleId);
     }
 }

@@ -37,7 +37,9 @@ public class WebSecurityConfig {
                         .requestMatchers(
                                 "/v1/api/token",
                                 "/v1/api/user-register",
+                                "/v1/api/doctor-register",
                                 "/v1/api/test",
+                                "/v1/api/activate-register/*",
                                 "/swagger-ui/**",
                                 "/swagger-ui",
                                 "/swagger-ui.html",

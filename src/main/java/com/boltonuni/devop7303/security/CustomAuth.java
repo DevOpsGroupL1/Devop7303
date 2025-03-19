@@ -55,6 +55,7 @@ public class CustomAuth implements AuthenticationProvider {
             role = roleService.findRoleById(userRole.getRoleId());
         }
         System.out.println(role);
+        System.out.println(role.getRoleName());
         List<GrantedAuthority> roleAuth = new ArrayList<>();
         SimpleGrantedAuthority auth = new SimpleGrantedAuthority(role.getRoleName());
         roleAuth.add(auth);
