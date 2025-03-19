@@ -36,6 +36,17 @@ public class UserRoleService {
         return userRoleRepo.save(roleToUser);
     }
 
+    public UserRole saveDoctorRole(User user){
+        Role role = roleRepo.findRoleByName("DOCTOR");
+        System.out.println("Role...........");
+        System.out.println(role);
+        UserRole roleToUser = new UserRole();
+        roleToUser.setUserId(user.getId());
+        roleToUser.setRoleId(role.getId());
+        roleToUser.setDateCreated(LocalDateTime.now());
+        return userRoleRepo.save(roleToUser);
+    }
+
     public Role getRole(int roleId){
         return roleRepo.findRoleById(roleId);
     }
