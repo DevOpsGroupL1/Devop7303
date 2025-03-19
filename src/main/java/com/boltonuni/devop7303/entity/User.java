@@ -30,7 +30,7 @@ public class User {
     private LocalDateTime dateCreated;
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private UserDetail userDetail;
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private DoctorDetail doctorDetail;
     @Transient
     private Role userRole;
