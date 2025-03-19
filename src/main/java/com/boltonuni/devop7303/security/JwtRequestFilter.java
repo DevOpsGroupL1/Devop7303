@@ -54,9 +54,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
             try {
                 UserDetails userDetails = this.jwtDetailService.loadUserByUsername(username);
-                System.out.println("User detail: ");
-                System.out.println(userDetails.toString());
-                System.out.println(userDetails.getAuthorities());
 
                 // if token is valid configure Spring Security to manually set authentication
                 if (jwtTokenUtil.validateToken(jwtToken, userDetails) && !jwtTokenUtil.hasTokenExpired(jwtToken)) {
