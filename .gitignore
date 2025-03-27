@@ -36,6 +36,7 @@ build/
 ## Terraform ##
 *.tfvars
 *.tfstate
+*.tfstate.*
 *.tfstate.backup
 *.tfplan
 .terraform.lock.hcl
