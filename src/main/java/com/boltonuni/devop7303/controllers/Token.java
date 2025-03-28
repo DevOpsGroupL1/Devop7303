@@ -1,9 +1,12 @@
 package com.boltonuni.devop7303.controllers;
 
+import com.boltonuni.devop7303.entity.User;
 import com.boltonuni.devop7303.models.LoginRequest;
 import com.boltonuni.devop7303.models.Response;
 import com.boltonuni.devop7303.security.JwtTokenUtil;
 import com.boltonuni.devop7303.security.JwtUserDetailsService;
+import com.boltonuni.devop7303.service.ScheduleService;
+import com.boltonuni.devop7303.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -30,6 +34,10 @@ public class Token {
     JwtUserDetailsService userService;
     @Autowired
     JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    UserService userObj;
+    @Autowired
+    ScheduleService scheduleService;
 
     @GetMapping(value = "test")
     public String test(){
@@ -45,9 +53,17 @@ public class Token {
             final UserDetails userDetails =  userService.loadUserByUsername(login.getEmail());
             String token = jwtTokenUtil.generateToken(userDetails);
             final long expiry = jwtTokenUtil.getExpirationDateFromToken(token).getTime();
+            User user = (User) userObj.getUsers(login.getEmail()).getData();
+            user.setPassword(null);
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
             response.put("expiry", expiry);
+            response.put("user", user);
+            response.put("weightLoss", 30);
+            response.put("health", 60);
+            response.put("litre", 15);
+            response.put("upcoming",new ArrayList<>());
+            response.put("lastTaken", scheduleService.getLastTakenDosage(user.getId()));
             return new Response("success", "00",response);
 
         }catch (NullPointerException n){

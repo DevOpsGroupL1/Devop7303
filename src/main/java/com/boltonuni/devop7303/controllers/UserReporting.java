@@ -2,11 +2,13 @@ package com.boltonuni.devop7303.controllers;
 
 import com.boltonuni.devop7303.entity.User;
 import com.boltonuni.devop7303.models.Response;
+import com.boltonuni.devop7303.service.ScheduleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +21,8 @@ import java.security.Principal;
 @RequestMapping(value = "/v1/api/")
 @CrossOrigin
 public class UserReporting {
-
+    @Autowired
+    ScheduleService scheduleService;
 
     @Operation(summary = "Returns Patient overall report")
     @ApiResponses(value =
@@ -34,6 +37,8 @@ public class UserReporting {
     @GetMapping(value = "patient/report")
     public Response getReports(Principal principal){
         System.out.println("email: "+principal.getName());
-        return null;
+        return scheduleService.getPatientHistory(principal.getName());
     }
+
+
 }

@@ -1,9 +1,11 @@
 package com.boltonuni.devop7303.service;
 
+import com.boltonuni.devop7303.entity.DosageIntake;
 import com.boltonuni.devop7303.entity.Dosages;
 import com.boltonuni.devop7303.entity.Schedules;
 import com.boltonuni.devop7303.entity.User;
 import com.boltonuni.devop7303.models.Response;
+import com.boltonuni.devop7303.repository.DosageIntakeRepo;
 import com.boltonuni.devop7303.repository.DosagesRepo;
 import com.boltonuni.devop7303.repository.SchedulesRepo;
 import org.slf4j.Logger;
@@ -30,6 +32,8 @@ public class ScheduleService {
     private EmailService emailService;
     @Autowired
     DosagesRepo dosagesRepo;
+    @Autowired
+    DosageIntakeRepo dosageIntakeRepo;
 
     /**
      * Save schedule
@@ -117,7 +121,7 @@ public class ScheduleService {
 
 
             System.out.println(schedules.getDosages().size());
-            Dosages dosages = schedules.getDosages().get(0);
+            Dosages dosages = schedules.getDosages().stream().filter((dose)->dose.getId()==dosageId).collect(Collectors.toList()).get(0);
             System.out.println("DOsages: ");
             System.out.println(dosages.toString());
 
@@ -127,6 +131,15 @@ public class ScheduleService {
 
             dosages.setTaken(true);
             Dosages dosage = dosagesRepo.save(dosages);
+            DosageIntake userIntake = dosageIntakeRepo.findDosageIntakeByUserId(schedules.getUserId());
+            DosageIntake intake = null;
+            if(userIntake==null)
+                intake = new DosageIntake();
+            intake.setDosageId(dosage.getId());
+            intake.setUserId(schedules.getUserId());
+            intake.setDateCreated(LocalDateTime.now());
+            dosageIntakeRepo.save(intake);
+
             return new Response("Success", "00", "Dosage have been updated.");
 
         }catch (Throwable th){
@@ -134,5 +147,18 @@ public class ScheduleService {
             LOGGER.debug("updateDosageIntake: ",th);
             return new Response("Failed", "99", "Operation failed");
         }
+    }
+
+    public Dosages getLastTakenDosage(String userId){
+        DosageIntake lastDose = dosageIntakeRepo.findDosageIntakeByUserId(userId);
+        Dosages lastDosage = dosagesRepo.findById(lastDose.getDosageId()).orElse(null);
+        return lastDosage;
+    }
+
+    public Response getPatientHistory(String patientEmail){
+        User user = userService.findByEmail(patientEmail);
+        List<Schedules> history = schedulesRepo.findSchedulesByUserId(user.getId());
+        Response response = new Response("Success", "00", history);
+        return response;
     }
 }
