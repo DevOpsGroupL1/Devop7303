@@ -14,13 +14,13 @@ pipeline {
 
         stage('Build and Install dependencies') {
             steps {
-                echo 'Installing application dependencies'
+                echo 'Installing dependencies'
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Performing test 123'
+                echo 'Performing test ...'
             }
         }
 
