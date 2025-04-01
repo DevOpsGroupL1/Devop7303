@@ -15,8 +15,8 @@ public class DoctorHistoryService {
         this.doctorHistoryRepository = doctorHistoryRepository;
     }
 
-    public Response getPrescriptionsByDoctor(Long doctorId) {
-        List<DoctorHistory> list = doctorHistoryRepository.findByDoctorId(doctorId);
+    public Response getPrescriptionsByDoctor(String doctorId) {
+            List<DoctorHistory> list = doctorHistoryRepository.find;
         return new Response("Success", "00", list);
     }
 }

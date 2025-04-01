@@ -14,7 +14,7 @@ public class DoctorHistoryController {
 
 
     @GetMapping("/doctor/{doctorId}")
-    public Response getPrescriptionsByDoctor(@PathVariable Long doctorId) {
+    public Response getPrescriptionsByDoctor(@PathVariable String doctorId) {
         return doctorHistoryService.getPrescriptionsByDoctor(doctorId);
     }
 }
