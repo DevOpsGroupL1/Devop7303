@@ -3,6 +3,10 @@ variable "region" {
   type        = string
 }
 
+variable "bucket_name" {
+  description = "The s3 backend bucket name"
+}
+
 variable "Owner" {
   description = "The owner of the terraform configuration file."
   type        = string
