@@ -2,6 +2,10 @@ variable "region" {
   description = "The region in which the VPC will be created."
 }
 
+variable "bucket_name" {
+  description = "The s3 backend bucket name"
+}
+
 variable "Owner" {
   description = "The owner of the terraform configuration file."
 }
