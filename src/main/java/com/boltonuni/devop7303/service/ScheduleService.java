@@ -15,6 +15,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -151,14 +152,24 @@ public class ScheduleService {
 
     public Dosages getLastTakenDosage(String userId){
         DosageIntake lastDose = dosageIntakeRepo.findDosageIntakeByUserId(userId);
+        if(lastDose==null)
+            return null;
         Dosages lastDosage = dosagesRepo.findById(lastDose.getDosageId()).orElse(null);
         return lastDosage;
     }
 
-    public Response getPatientHistory(String patientEmail){
+    public Response loadPatientHistory(String patientEmail){
         User user = userService.findByEmail(patientEmail);
-        List<Schedules> history = schedulesRepo.findSchedulesByUserId(user.getId());
+        System.out.println(user.getId());
+        List<Schedules> history = schedulesRepo.loadPatientHistory(user.getId());
         Response response = new Response("Success", "00", history);
         return response;
+    }
+
+    public List<Schedules> loadUpcoming(User user){
+        List<Schedules> schedules = schedulesRepo.loadUpcomingDosage(user.getId(), LocalDate.now());
+        if(schedules!=null && schedules.size()>2)
+            return schedules.stream().limit(2).collect(Collectors.toList());
+        return schedules;
     }
 }

@@ -37,7 +37,7 @@ public class UserReporting {
     @GetMapping(value = "patient/report")
     public Response getReports(Principal principal){
         System.out.println("email: "+principal.getName());
-        return scheduleService.getPatientHistory(principal.getName());
+        return scheduleService.loadPatientHistory(principal.getName());
     }
 
 

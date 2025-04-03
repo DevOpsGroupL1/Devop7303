@@ -53,7 +53,9 @@ public class Token {
             final UserDetails userDetails =  userService.loadUserByUsername(login.getEmail());
             String token = jwtTokenUtil.generateToken(userDetails);
             final long expiry = jwtTokenUtil.getExpirationDateFromToken(token).getTime();
-            User user = (User) userObj.getUsers(login.getEmail()).getData();
+            User user = userObj.findByEmail(login.getEmail());
+            System.out.println("User.....");
+            System.out.println(user.toString());
             user.setPassword(null);
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
@@ -62,13 +64,15 @@ public class Token {
             response.put("weightLoss", 30);
             response.put("health", 60);
             response.put("litre", 15);
-            response.put("upcoming",new ArrayList<>());
+            response.put("upcoming",scheduleService.loadUpcoming(user));
             response.put("lastTaken", scheduleService.getLastTakenDosage(user.getId()));
             return new Response("success", "00",response);
 
         }catch (NullPointerException n){
+            n.printStackTrace();
             return new Response("failed", "99","Email/Password cannot be null");
         } catch (Exception e) {
+            e.printStackTrace();
             return new Response("failed", "98",e.getMessage());
         }
     }
