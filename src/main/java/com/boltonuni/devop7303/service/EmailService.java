@@ -78,7 +78,4 @@ public class EmailService {
             LOGGER.debug("EmailService error", th);
         }
     }
-
-
-
 }

@@ -56,6 +56,10 @@ public class ScheduleService {
             schedules.setId(id.toString());
             List<Dosages> dosagesList = schedules.getDosages().stream().map((dosage)->{
                 Dosages dose = dosage;
+                LocalDateTime timeToTake = dose.getIntakeTime();
+                LocalDateTime reminder = timeToTake.minusMinutes(10);
+                dose.setRemindAt(reminder);
+                dose.setReminded("No");
                 dose.setSchedule(schedules);
                 return dose;
             }).collect(Collectors.toList());
