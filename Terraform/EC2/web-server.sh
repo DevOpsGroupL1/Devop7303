@@ -38,8 +38,3 @@ sudo systemctl start docker
 
 #Install mysql client
 sudo apt install mysql-client-core-8.0 -y
-
-#Install nodejs and its package manager npm/yarn
-sudo apt install nodejs -y
-sudo apt install npm -y
-sudo npm install -g yarn
