@@ -1,10 +1,9 @@
 FROM openjdk:17
-MAINTAINER Chinwoko <chinwoko@ecobank.com>
 EXPOSE 2025
 # Set OS time zone
 #ENV TZ Africa/Lagos
 ENV VAR_SERVICE_NAME=devop7303
-ENV VAR_DEPLOYMENT_ARTEFACT_PATH=docker
+ENV VAR_DEPLOYMENT_ARTEFACT_PATH=Docker
 # Setup
 COPY ./$VAR_DEPLOYMENT_ARTEFACT_PATH/startup.sh /root/$VAR_SERVICE_NAME/startup.sh
 COPY ./$VAR_DEPLOYMENT_ARTEFACT_PATH/env.sh /root/$VAR_SERVICE_NAME/env.sh
