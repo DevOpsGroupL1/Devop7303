@@ -66,3 +66,11 @@ sudo systemctl enable docker
 
 # Start Docker
 sudo systemctl start docker
+
+#Install nodejs and its package manager npm/yarn
+sudo apt install nodejs -y
+sudo apt install npm -y
+sudo npm install -g yarn
+
+#Install maven
+sudo apt install maven -y
