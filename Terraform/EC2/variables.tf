@@ -30,20 +30,25 @@ variable "instance_type" {
   type        = string
 }
 
+variable "server_name" {
+  description = "The names of the EC2 instances."
+  type        = list(string)
+}
+
 variable "security_group_name" {
   description = "The name of the security group to create."
-  type        = string
+  type        = list(string)
 }
 
 variable "ingress_rules" {
   description = "A list of ingress rules to apply to the security group."
-  type = list(object({
+  type = list(list(object({
     description = string
     from_port   = number
     to_port     = number
     protocol    = string
     cidr_blocks = list(string)
-  }))
+  })))
 }
 
 variable "grp1_ec2_egress_cidr_blocks" {
