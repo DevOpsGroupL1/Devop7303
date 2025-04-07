@@ -70,7 +70,7 @@ sudo systemctl start docker
 #Install nodejs and its package manager npm/yarn
 sudo apt install nodejs -y
 sudo apt install npm -y
-sudo npm install -g yarn
-
+sudo npm install -g corepack
+corepack prepare yarn@4.2.2 --activate
 #Install maven
 sudo apt install maven -y
