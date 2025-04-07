@@ -8,7 +8,7 @@ resource "aws_key_pair" "main" {
 resource "aws_instance" "ec2-public" {
   count                       = var.pub_ec2_count
   ami                         = var.ami
-  instance_type               = var.instance_type
+  instance_type               = element(var.instance_type, count.index)
   key_name                    = aws_key_pair.main.key_name
   vpc_security_group_ids      = [aws_security_group.sg-public[count.index].id]
   subnet_id                   = data.terraform_remote_state.vpc.outputs.public_subnet_ids[count.index < 1 ? 0 : 1]
