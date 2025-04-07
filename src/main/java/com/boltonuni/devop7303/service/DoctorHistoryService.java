@@ -16,7 +16,8 @@ public class DoctorHistoryService {
     }
 
     public Response getPrescriptionsByDoctor(String doctorId) {
-            List<DoctorHistory> list = doctorHistoryRepository.find;
+        List<DoctorHistory> list = doctorHistoryRepository.loadDoctorHistory(doctorId);
         return new Response("Success", "00", list);
     }
+
 }
