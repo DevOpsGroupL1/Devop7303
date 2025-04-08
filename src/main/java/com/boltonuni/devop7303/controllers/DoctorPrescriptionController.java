@@ -1,10 +1,9 @@
 package com.boltonuni.devop7303.controllers;
 
-import com.boltonuni.devop7303.entity.DoctorHistory;
 import com.boltonuni.devop7303.entity.Schedules;
+import com.boltonuni.devop7303.models.Response;
 import com.boltonuni.devop7303.service.DoctorPrescriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,12 +22,13 @@ public class DoctorPrescriptionController {
 
     @GetMapping("/doctor-prescriptions/{doctorId}")
     @PreAuthorize("hasAuthority('DOCTOR')")
-    public ResponseEntity<List<Schedules>> getDoctorPrescriptionHistory(@PathVariable String doctorId) {
+    public Response getDoctorPrescriptionHistory(@PathVariable String doctorId) {
         List<Schedules> prescriptions = doctorPrescriptionService.getDoctorPrescriptionHistory(doctorId);
 
         if (prescriptions.isEmpty()) {
-            return ResponseEntity.ok().body(prescriptions); // Returns an empty array if no prescriptions
+            return new Response("00", "No prescriptions found", prescriptions);
         }
-        return ResponseEntity.ok().body(prescriptions);
+        return new Response("00", "Success", prescriptions);
     }
 }
+
