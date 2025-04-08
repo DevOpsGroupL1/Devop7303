@@ -2,33 +2,33 @@
 resource "aws_key_pair" "main" {
   key_name   = var.key_name
   public_key = file("/home/hardarmyyy/swe-7302.pub")
-  lifecycle {
-    ignore_changes = [public_key]
-  }
 }
 
 #Create Instances
 resource "aws_instance" "ec2-public" {
   count                       = var.pub_ec2_count
   ami                         = var.ami
-  instance_type               = var.instance_type
+  instance_type               = element(var.instance_type, count.index)
   key_name                    = aws_key_pair.main.key_name
-  vpc_security_group_ids      = [aws_security_group.sg-public.id]
+  vpc_security_group_ids      = [aws_security_group.sg-public[count.index].id]
   subnet_id                   = data.terraform_remote_state.vpc.outputs.public_subnet_ids[count.index < 1 ? 0 : 1]
   associate_public_ip_address = true
+  user_data                   = count.index == 0 ? file("web-server.sh") : file("deployment-server.sh")
+  user_data_replace_on_change = true
   tags = {
-    Name = "SWE7302-${count.index}"
+    Name = element(var.server_name, count.index)
   }
 }
 
 #Create security groups
 resource "aws_security_group" "sg-public" {
-  name        = var.security_group_name
+  count       = var.pub_ec2_count
+  name        = var.security_group_name[count.index]
   description = "Security group for ec2 instances"
   vpc_id      = data.terraform_remote_state.vpc.outputs.vpc_id
 
   dynamic "ingress" {
-    for_each = var.ingress_rules
+    for_each = var.ingress_rules[count.index]
     content {
       description = ingress.value["description"]
       from_port   = ingress.value["from_port"]
