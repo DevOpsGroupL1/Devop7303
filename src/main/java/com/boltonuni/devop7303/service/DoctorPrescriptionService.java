@@ -1,6 +1,7 @@
 package com.boltonuni.devop7303.service;
 
 import com.boltonuni.devop7303.entity.DoctorHistory;
+import com.boltonuni.devop7303.entity.Schedules;
 import com.boltonuni.devop7303.repository.DoctorPrescriptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ public class DoctorPrescriptionService {
         this.doctorPrescriptionRepository = doctorPrescriptionRepository;
     }
 
-    public List<DoctorHistory> getDoctorPrescriptionHistory(Long doctorId) {
+    public List<Schedules> getDoctorPrescriptionHistory(String doctorId) {
         return doctorPrescriptionRepository.loadDoctorPrescriptionHistory(doctorId);
     }
 }
