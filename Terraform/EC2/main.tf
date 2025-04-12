@@ -50,5 +50,15 @@ resource "aws_security_group" "sg-public" {
   }
 }
 
+#create elastic IP
+resource "aws_eip" "ec2_eip" {
+  domain = "vpc"
+  depends_on = [aws_instance.ec2-public]
+}
 
-
+#associate elastic IP with instance
+resource "aws_eip_association" "ec2_eip_association" {
+  instance_id   = aws_instance.ec2-public[0].id
+  allocation_id = aws_eip.ec2_eip.id
+  depends_on = [aws_instance.ec2-public]
+}
