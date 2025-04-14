@@ -32,8 +32,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-## Terraform ##
-*.tfvars
-.terraform.lock.hcl
-.terraform
