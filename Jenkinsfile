@@ -8,7 +8,7 @@ pipeline {
             steps {
                 git branch: 'staging', url: 'https://github.com/DevOpsGroupL1/Devop7303'
 
-                echo 'Source code from github repository'
+                echo 'Source code from github repository in ${REPO_NAME}'
             }
         }
 
