@@ -1,4 +1,3 @@
-Groovy
 def repoName = ''
 def branchName = ''
 
