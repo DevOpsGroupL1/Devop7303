@@ -2,13 +2,44 @@ pipeline {
 
     agent any
 
+    environment {
+        REPO_NAME = ''
+        BRANCH = ''
+        REPO_URL = ''
+        BUILD_NUMBER = ''
+    }
+
     stages {
+
+        stage('Initialize') {
+            steps {
+                script {
+                    def repoUrl = env.GIT_URL ?: ''
+                    def branchName = env.GIT_BRANCH ?: ''
+                    def repoName = repoUrl.tokenize('/').last().replace('.git', '')
+                    def buildNumber = env.BUILD_NUMBER ?: ''
+                    REPO_NAME = repoName
+                    BRANCH = branchName
+                    REPO_URL = repoUrl
+                    BUILD_NUMBER = buildNumber
+                }
+            }
+        }
 
         stage('Checkout') {
             steps {
-                git branch: 'staging', url: 'https://github.com/DevOpsGroupL1/Devop7303'
-
-                echo 'Source code from github repository in ${REPO_NAME}'
+                script {
+                    echo "Checking out branch ${BRANCH} from repository ${REPO_NAME}"
+                    if (REPO_NAME == 'Devop7303') {
+                        git branch: "${BRANCH}", url: "${REPO_URL}"
+                        echo "Repository URL: ${REPO_URL}"
+                        echo "Repository Name: ${REPO_NAME}"
+                        echo "Branch Name: ${BRANCH}"
+                        echo "Build Number: ${BUILD_NUMBER}"
+                    } else {
+                        error "This is not the correct repository. Exiting build."
+                    }
+                }
             }
         }
 
