@@ -3,44 +3,29 @@ pipeline {
     agent any
 
     environment {
-        REPO_NAME = ''
-        BRANCH = ''
-        REPO_URL = ''
-        BUILD_NUMBER = ''
+        REPO_NAME = "${env.JOB_NAME}".tokenize('/')[-1]
+        BRANCH_NAME = "${env.JOB_NAME}".tokenize('/').get(1)
+    }
+
+    options {
+        skipDefaultCheckout(true)
     }
 
     stages {
 
-        stage('Initialize') {
-            steps {
-                script {
-                    def repoUrl = scm.getUserRemoteConfigs()[0].getUrl()
-                    def branchName = scm.getBranches()[0].getName().replace('*/', '')
-                    def repoName = repoUrl.tokenize('/').last().replace('.git', '')
-                    def buildNumber = currentBuild.number.toString()
-                    env.REPO_NAME = repoName
-                    env.BRANCH = branchName
-                    env.REPO_URL = repoUrl
-                    env.BUILD_NUMBER = buildNumber
-                }
-            }
-        }
-
         stage('Checkout') {
+            when {
+                // branch "${env.BRANCH_NAME}"
+                branch 'staging'
+            }
             steps {
+                checkout scm
                 script {
-                    echo "Checking out branch ${env.BRANCH} from repository ${env.REPO_NAME}"
-                    if (env.REPO_NAME == 'Devop7303') {
-                        git branch: "${env.BRANCH}", url: "${env.REPO_URL}"
-                        echo "Repository URL: ${env.REPO_URL}"
-                        echo "Repository Name: ${env.REPO_NAME}"
-                        echo "Branch Name: ${env.BRANCH}"
-                        echo "Build Number: ${env.BUILD_NUMBER}"
-                    } else {
-                        error "This is not the correct repository. Exiting build."
-                    }
+                    echo "Checking out branch: ${env.BRANCH_NAME}"
+                    echo "Repository name: ${env.REPO_NAME}"
                 }
             }
+
         }
 
         stage('Build and Install dependencies') {
