@@ -14,8 +14,8 @@ pipeline {
         stage('Initialize') {
             steps {
                 script {
-                    def repoUrl = env.GIT_URL ?: ''
-                    def branchName = env.GIT_BRANCH ?: ''
+                    def repoUrl = env.GIT_URL ?: 'https://github.com/DevOpsGroupL1/Devop7303.git'
+                    def branchName = env.GIT_BRANCH ?: 'staging'
                     def repoName = repoUrl.tokenize('/').last().replace('.git', '')
                     def buildNumber = env.BUILD_NUMBER ?: ''
                     env.REPO_NAME = repoName
