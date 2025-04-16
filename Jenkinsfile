@@ -7,7 +7,11 @@ pipeline {
         stage('Print Environment variables') {
             steps {
                 echo '---- Printing Environment variables ---'
-                sh 'printenv'
+                script {
+                    echo "BRANCH_NAME: ${env.GIT_BRANCH}"
+                    echo "BUILD_NUMBER: ${env.BUILD_NUMBER}"
+                    echo "GIT_URL: ${env.GIT_URL}"
+                }
             }
         }
 
