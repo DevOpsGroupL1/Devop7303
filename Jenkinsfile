@@ -18,10 +18,10 @@ pipeline {
                     def branchName = env.GIT_BRANCH ?: ''
                     def repoName = repoUrl.tokenize('/').last().replace('.git', '')
                     def buildNumber = env.BUILD_NUMBER ?: ''
-                    REPO_NAME = repoName
-                    BRANCH = branchName
-                    REPO_URL = repoUrl
-                    BUILD_NUMBER = buildNumber
+                    env.REPO_NAME = repoName
+                    env.BRANCH = branchName
+                    env.REPO_URL = repoUrl
+                    env.BUILD_NUMBER = buildNumber
                 }
             }
         }
@@ -29,13 +29,13 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    echo "Checking out branch ${BRANCH} from repository ${REPO_NAME}"
-                    if (REPO_NAME == 'Devop7303') {
-                        git branch: "${BRANCH}", url: "${REPO_URL}"
-                        echo "Repository URL: ${REPO_URL}"
-                        echo "Repository Name: ${REPO_NAME}"
-                        echo "Branch Name: ${BRANCH}"
-                        echo "Build Number: ${BUILD_NUMBER}"
+                    echo "Checking out branch ${env.BRANCH} from repository ${env.REPO_NAME}"
+                    if (env.REPO_NAME == 'Devop7303') {
+                        git branch: "${env.BRANCH}", url: "${env.REPO_URL}"
+                        echo "Repository URL: ${env.REPO_URL}"
+                        echo "Repository Name: ${env.REPO_NAME}"
+                        echo "Branch Name: ${env.BRANCH}"
+                        echo "Build Number: ${env.BUILD_NUMBER}"
                     } else {
                         error "This is not the correct repository. Exiting build."
                     }
