@@ -4,23 +4,34 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            when {
-                expression {
-                    env.BRANCH_NAME == 'staging'
-                }
-            }
+        stage('Print Environment variables') {
             steps {
-                checkout scm
                 script {
-                    echo "Checking out branch: ${env.BRANCH_NAME}"
-                    echo "Repository name: ${env.REPO_NAME}"
-                    echo "Build number: ${env.BUILD_NUMBER}"
-                    echo "Job name: ${env.JOB_NAME}"
+                    echo '---- Printing Environment variables ---'
+                    env.each { key, value ->
+                        echo "${key} = ${value}"
+                    }
                 }
             }
-
         }
+
+        // stage('Checkout') {
+        //     when {
+        //         expression {
+        //             env.BRANCH_NAME == 'staging'
+        //         }
+        //     }
+        //     steps {
+        //         checkout scm
+        //         script {
+        //             echo "Checking out branch: ${env.BRANCH_NAME}"
+        //             echo "Repository name: ${env.REPO_NAME}"
+        //             echo "Build number: ${env.BUILD_NUMBER}"
+        //             echo "Job name: ${env.JOB_NAME}"
+        //         }
+        //     }
+
+        // }
 
         stage('Build and Install dependencies') {
             steps {
