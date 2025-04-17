@@ -1,9 +1,11 @@
 package com.boltonuni.devop7303.service;
 
+import com.boltonuni.devop7303.entity.DosageIntake;
 import com.boltonuni.devop7303.entity.Dosages;
 import com.boltonuni.devop7303.entity.Schedules;
 import com.boltonuni.devop7303.entity.User;
 import com.boltonuni.devop7303.models.Response;
+import com.boltonuni.devop7303.repository.DosageIntakeRepo;
 import com.boltonuni.devop7303.repository.DosagesRepo;
 import com.boltonuni.devop7303.repository.SchedulesRepo;
 import org.slf4j.Logger;
@@ -13,6 +15,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -30,6 +33,8 @@ public class ScheduleService {
     private EmailService emailService;
     @Autowired
     DosagesRepo dosagesRepo;
+    @Autowired
+    DosageIntakeRepo dosageIntakeRepo;
 
     /**
      * Save schedule
@@ -51,6 +56,10 @@ public class ScheduleService {
             schedules.setId(id.toString());
             List<Dosages> dosagesList = schedules.getDosages().stream().map((dosage)->{
                 Dosages dose = dosage;
+                LocalDateTime timeToTake = dose.getIntakeTime();
+                LocalDateTime reminder = timeToTake.minusMinutes(10);
+                dose.setRemindAt(reminder);
+                dose.setReminded("No");
                 dose.setSchedule(schedules);
                 return dose;
             }).collect(Collectors.toList());
@@ -117,7 +126,7 @@ public class ScheduleService {
 
 
             System.out.println(schedules.getDosages().size());
-            Dosages dosages = schedules.getDosages().get(0);
+            Dosages dosages = schedules.getDosages().stream().filter((dose)->dose.getId()==dosageId).collect(Collectors.toList()).get(0);
             System.out.println("DOsages: ");
             System.out.println(dosages.toString());
 
@@ -127,6 +136,15 @@ public class ScheduleService {
 
             dosages.setTaken(true);
             Dosages dosage = dosagesRepo.save(dosages);
+            DosageIntake userIntake = dosageIntakeRepo.findDosageIntakeByUserId(schedules.getUserId());
+            DosageIntake intake = null;
+            if(userIntake==null)
+                intake = new DosageIntake();
+            intake.setDosageId(dosage.getId());
+            intake.setUserId(schedules.getUserId());
+            intake.setDateCreated(LocalDateTime.now());
+            dosageIntakeRepo.save(intake);
+
             return new Response("Success", "00", "Dosage have been updated.");
 
         }catch (Throwable th){
@@ -134,5 +152,28 @@ public class ScheduleService {
             LOGGER.debug("updateDosageIntake: ",th);
             return new Response("Failed", "99", "Operation failed");
         }
+    }
+
+    public Dosages getLastTakenDosage(String userId){
+        DosageIntake lastDose = dosageIntakeRepo.findDosageIntakeByUserId(userId);
+        if(lastDose==null)
+            return null;
+        Dosages lastDosage = dosagesRepo.findById(lastDose.getDosageId()).orElse(null);
+        return lastDosage;
+    }
+
+    public Response loadPatientHistory(String patientEmail){
+        User user = userService.findByEmail(patientEmail);
+        System.out.println(user.getId());
+        List<Schedules> history = schedulesRepo.loadPatientHistory(user.getId());
+        Response response = new Response("Success", "00", history);
+        return response;
+    }
+
+    public List<Schedules> loadUpcoming(User user){
+        List<Schedules> schedules = schedulesRepo.loadUpcomingDosage(user.getId(), LocalDate.now());
+        if(schedules!=null && schedules.size()>2)
+            return schedules.stream().limit(2).collect(Collectors.toList());
+        return schedules;
     }
 }

@@ -45,7 +45,7 @@ public class Home {
                             mediaType = "application/json",
                             schema = @Schema(implementation = User.class)
                     ) }), @ApiResponse(responseCode = "99", description = "Error Occurred",content = @Content) })
-//    @PreAuthorize("hasAuthority('DOCTOR')")
+    @PreAuthorize("hasAuthority('DOCTOR')")
     @GetMapping(value = "users")
     public Response getUsers(Principal principal){
         System.out.println("email: "+principal.getName());
@@ -63,7 +63,7 @@ public class Home {
                             mediaType = "application/json",
                             schema = @Schema(implementation = User.class)
                     ) }), @ApiResponse(responseCode = "99", description = "Error Occurred",content = @Content) })
-//    @PreAuthorize("hasAuthority('DOCTOR')")
+    @PreAuthorize("hasAuthority('DOCTOR')")
     @PostMapping(value = "doctor/schedule")
     public Response saveSchedule(@RequestBody @Valid Schedules schedules){
         System.out.println("Schedule: "+schedules);
@@ -74,7 +74,7 @@ public class Home {
 
 
     //Get Last Patients' prescriptions
-//    @PreAuthorize("hasAnyAuthority('USER', 'DOCTOR')")
+    @PreAuthorize("hasAnyAuthority('USER', 'DOCTOR')")
     @Operation(summary = "Get Last Prescriptions base on Role")
     @ApiResponses(value =
             {@ApiResponse(

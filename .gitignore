@@ -3,7 +3,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-src/resources/**
+!**/src/resources/**
 
 ### STS ###
 .apt_generated
@@ -32,12 +32,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-## Terraform ##
-*.tfvars
-*.tfstate
-*.tfstate.*
-*.tfstate.backup
-*.tfplan
-.terraform.lock.hcl
-.terraform

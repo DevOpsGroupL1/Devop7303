@@ -26,6 +26,8 @@ public class Dosages {
     private String dosage;
     private boolean taken;
     private LocalDateTime dateCreated;
+    private LocalDateTime remindAt;
+    private String reminded;
 
     public int getId() {
         return id;
@@ -83,6 +85,22 @@ public class Dosages {
         this.dateCreated = dateCreated;
     }
 
+    public LocalDateTime getRemindAt() {
+        return remindAt;
+    }
+
+    public void setRemindAt(LocalDateTime remindAt) {
+        this.remindAt = remindAt;
+    }
+
+    public String getReminded() {
+        return reminded;
+    }
+
+    public void setReminded(String reminded) {
+        this.reminded = reminded;
+    }
+
     @Override
     public String toString() {
         return "Dosages{" +
@@ -93,6 +111,8 @@ public class Dosages {
                 ", dosage='" + dosage + '\'' +
                 ", taken=" + taken +
                 ", dateCreated=" + dateCreated +
+                ", remindAt=" + remindAt +
+                ", reminded=" + reminded +
                 '}';
     }
 }
