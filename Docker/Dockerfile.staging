@@ -2,14 +2,14 @@ FROM maven:3.8.6-eclipse-temurin-17 AS build
 
 WORKDIR /app
 
-COPY . /src
+COPY . .
 
 RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:17-jdk AS runtime
 
-COPY --from=build /src/target/*.jar /src/target/DEVOP7303.jar
+COPY --from=build /app/target/*.jar DEVOP7303.jar
 
 EXPOSE 2025
 
-ENTRYPOINT ["java", "-jar", "/src/target/DEVOP7303.jar"]
+ENTRYPOINT ["java", "-jar", "DEVOP7303.jar"]
