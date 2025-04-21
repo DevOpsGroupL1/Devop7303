@@ -1,0 +1,10 @@
+README.md
+Jenkinsfile
+.git
+.gitignore
+
+# Ignore Docker-related files
+Docker/
+Dockerfile.staging
+Dockerbuild.sh
+Dockerstart.sh

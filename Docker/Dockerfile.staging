@@ -1,0 +1,15 @@
+FROM maven:3.8.6-openjdk-17-slim AS build
+
+WORKDIR /app
+
+COPY . /src
+
+RUN mvn clean package -DskipTests
+
+FROM openjdk:17-alpine AS runtime
+
+COPY --from=build /src/target/*.jar /src/target/DEVOP7303.jar
+
+EXPOSE 2025
+
+ENTRYPOINT ["java", "-jar", "/src/target/DEVOP7303.jar"]
