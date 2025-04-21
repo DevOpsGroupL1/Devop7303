@@ -44,6 +44,20 @@ pipeline {
             }
         }
 
+        stage('Build and Install dependencies') {
+            when {
+                branch 'PR-*'
+            }
+            steps {
+                script {
+                    dir('DEVOP7303') {
+                        echo "Building the project for ${repoName} on branch ${branchName}."
+                        sh 'mvn clean install -DskipTests=true'
+                    }
+                }              
+            }
+        }
+
         stage('SonarQube analysis') {
             when {
                 branch 'PR-*'
@@ -69,20 +83,6 @@ pipeline {
                     echo "Waiting for SonarQube quality gate to pass for ${repoName} repository."                  
                     waitForQualityGate abortPipeline: true, credentialsId: 'Sonar-token'                   
                 }
-            }
-        }
-
-        stage('Build and Install dependencies') {
-            when {
-                branch 'PR-*'
-            }
-            steps {
-                script {
-                    dir('DEVOP7303') {
-                        echo "Building the project for ${repoName} on branch ${branchName}."
-                        sh 'mvn clean install -DskipTests=true'
-                    }
-                }              
             }
         }
 
