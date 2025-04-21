@@ -67,7 +67,14 @@ pipeline {
                     dir('DEVOP7303') {
                         echo "Running SonarQube analysis for ${repoName} repository."
                         withSonarQubeEnv('sonar-server') {
-                            sh "${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectName=${repoName} -Dsonar.projectKey=${repoName} -Dsonar.projectVersion=${BUILD_NUMBER}"
+                            sh """
+                                ${SCANNER_HOME}/bin/sonar-scanner \
+                                -Dsonar.projectName=${repoName} \
+                                -Dsonar.projectKey=${repoName} \
+                                -Dsonar.projectVersion=${BUILD_NUMBER} \
+                                -Dsonar.sources=src \
+                                -Dsonar.java.binaries=target/classes
+                            """
                         }
                     }
                 }
