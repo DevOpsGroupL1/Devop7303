@@ -71,8 +71,6 @@ public class UserService {
             user.setUserDetail(userDetail);
 
             User savedUser = userRepo.save(user);
-            System.out.println("...................");
-            System.out.println(savedUser);
             UserRole userRole = userRoleService.saveUserRole(savedUser);
             Role role = roleService.findRoleById(userRole.getRoleId());
             savedUser.setUserRole(role);
