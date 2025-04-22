@@ -22,12 +22,12 @@ public interface SchedulesRepo extends JpaRepository<Schedules, Integer> {
     @Query("SELECT s, d FROM Schedules s, Dosages d WHERE s.id = :schedId AND d.id = :dosageId")
     Schedules findSchedulesById(String schedId, int dosageId);
 
-    @Query(value = "SELECT * from Schedules s where user_id = ?",nativeQuery = true)
+    @Query(value = "SELECT * from schedules s where user_id = ?",nativeQuery = true)
     List<Schedules> loadPatientHistory(@Param("userId") String userId);
 
     List<Schedules> findSchedulesByUserAndStartDateGreaterThanEqual(User user, LocalDateTime startDate);
 
-    @Query(value = "SELECT s.* FROM Schedules s JOIN Dosages d ON d.schedule_id= s.id AND s.user_id =? AND d.taken = 0 AND DATE(d.intake_time) =?", nativeQuery = true)
+    @Query(value = "SELECT s.* FROM schedules s JOIN dosages d ON d.schedule_id= s.id AND s.user_id =? AND d.taken = 0 AND DATE(d.intake_time) =?", nativeQuery = true)
     List<Schedules> loadUpcomingDosage(@Param("userId") String userId, LocalDate date);
 
 }
