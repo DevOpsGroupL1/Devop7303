@@ -26,7 +26,7 @@ public class EmailService {
             String toAddress = emailAddress;
             String fromAddress = "noreply@bountyapp.ng";
             String senderName = "Group L1";
-            String domain = "http://localhost:8080/devop7303/v1/api/activate-register/"+userId;
+            String domain = "http://18.218.19.84:2025/devop7303/v1/api/activate-register/"+userId;
             String content = "<h3>Dear "+name+",</h3>"
                     + "<p>Your registration was successful. Click the link below to verify your account.</p>"
                     + "<p><a href='"+domain+"'>Click Here</a>"+"</p><br>"

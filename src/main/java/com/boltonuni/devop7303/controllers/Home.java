@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,7 +47,7 @@ public class Home {
                             schema = @Schema(implementation = User.class)
                     ) }), @ApiResponse(responseCode = "99", description = "Error Occurred",content = @Content) })
     @PreAuthorize("hasAuthority('DOCTOR')")
-    @GetMapping(value = "users")
+    @GetMapping(value = "users", produces = MediaType.APPLICATION_JSON_VALUE)
     public Response getUsers(Principal principal){
         System.out.println("email: "+principal.getName());
         return userService.getUsers(principal.getName());
