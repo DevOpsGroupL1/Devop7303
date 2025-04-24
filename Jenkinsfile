@@ -136,8 +136,8 @@ pipeline {
 
                             sh 'echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin docker.io'
 
-                            sh "docker tag grouponebe hardarmyyy/grouponebe-${BUILD_NUMBER}:latest"
-                            sh "docker push hardarmyyy/grouponebe-${BUILD_NUMBER}:latest"
+                            sh "docker tag grouponebe ${env.USERNAME}/grouponebe-${BUILD_NUMBER}:latest"
+                            sh "docker push ${env.USERNAME}/grouponebe-${BUILD_NUMBER}:latest"
 
                         }
                     }
@@ -154,7 +154,7 @@ pipeline {
             steps {
                 script {
                     echo "Cleaning up docker images for ${repoName} repository."
-                    sh "docker rmi -f hardarmyyy/grouponebe-${BUILD_NUMBER}:latest"
+                    sh "docker rmi -f ${env.USERNAME}/grouponebe-${BUILD_NUMBER}:latest"
                     sh "docker rmi -f grouponebe"
                 }
             }
@@ -196,7 +196,19 @@ pipeline {
         
         success {
             script {
-                echo 'Build completed successfully.'
+                echo "Build was successful. Proceeding to deploy to staging environment."
+
+                sshagent(['jenkins-staging-ssh-key']) {
+                    sh """
+                        ssh -o StrictHostKeyChecking=no ${env.STAGING_USERNAME}@${env.STAGING_REMOTE_HOST} '
+                        docker stop stagingbe || true &&
+                        docker rm stagingbe || true  &&
+                        docker image prune -af || true &&
+                        docker run -d -p ${env.STAGING_PORT}:2025 --name=stagingbe ${env.USERNAME}/grouponebe-${BUILD_NUMBER}:latest
+                        '
+                    """
+                }
+
                 cleanWs()
             }           
         }
