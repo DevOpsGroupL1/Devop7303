@@ -1,6 +1,5 @@
 package com.boltonuni.devop7303;
 
-import com.boltonuni.devop7303.configs.CorsConfig;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterRegistration;
 import org.springframework.boot.SpringApplication;
@@ -18,14 +17,14 @@ public class Devop7303Application {
 		SpringApplication.run(Devop7303Application.class, args);
 	}
 
-	@Bean
-	public FilterRegistrationBean filterRegistration(){
-		FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean((Filter) new CorsConfig(), new ServletRegistrationBean[0]);
-		filterRegistrationBean.setName("Cors Config Reg");
-//		filterRegistrationBean.setFilter(new CorsConfig());
-		filterRegistrationBean.addUrlPatterns(new String[]{"/*"});
-		filterRegistrationBean.setOrder(0);
-		return filterRegistrationBean;
-	}
+//	@Bean
+//	public FilterRegistrationBean filterRegistration(){
+//		FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean((Filter) new CorsConfig(), new ServletRegistrationBean[0]);
+//		filterRegistrationBean.setName("Cors Config Reg");
+////		filterRegistrationBean.setFilter(new CorsConfig());
+//		filterRegistrationBean.addUrlPatterns(new String[]{"/*"});
+//		filterRegistrationBean.setOrder(0);
+//		return filterRegistrationBean;
+//	}
 
 }
