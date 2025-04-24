@@ -20,7 +20,7 @@ public class CorsConfig implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         LOGGER.debug("Origin is.....:{}",request.getHeader("Origin"));
-        response.setHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+        response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT");
         response.setHeader("Pragma", "no-cache");
