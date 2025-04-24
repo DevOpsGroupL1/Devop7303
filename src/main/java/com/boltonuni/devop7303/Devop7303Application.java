@@ -22,8 +22,9 @@ public class Devop7303Application {
 	public FilterRegistrationBean filterRegistration(){
 		FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean((Filter) new CorsConfig(), new ServletRegistrationBean[0]);
 		filterRegistrationBean.setName("Cors Config Reg");
+//		filterRegistrationBean.setFilter(new CorsConfig());
 		filterRegistrationBean.addUrlPatterns(new String[]{"/*"});
-		filterRegistrationBean.setOrder(1);
+		filterRegistrationBean.setOrder(0);
 		return filterRegistrationBean;
 	}
 
