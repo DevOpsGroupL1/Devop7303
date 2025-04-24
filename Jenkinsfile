@@ -174,6 +174,29 @@ pipeline {
             }
         }
 
+        stage('Deploy to staging environment') {
+            when {
+                expression {
+                    return branchName == 'staging'
+                }
+            }
+            steps {
+                script {
+                    echo "Deploying to staging environment for ${repoName} repository."
+                    sshagent(['jenkins-staging-ssh-key']) {
+                    sh """
+                        ssh -o StrictHostKeyChecking=no ${env.STAGING_USERNAME}@${env.STAGING_REMOTE_HOST} '
+                        docker stop stagingbe || true &&
+                        docker rm stagingbe || true  &&
+                        docker image prune -af || true &&
+                        docker run -d -p ${env.STAGING_PORT}:2025 --name=stagingbe ${env.USERNAME}/grouponebe-${BUILD_NUMBER}:latest
+                        '
+                    """
+                }
+                }
+            }
+        }
+
         stage('Store build artifacts') {
             when {
                 expression {
@@ -196,19 +219,7 @@ pipeline {
         
         success {
             script {
-                echo "Build was successful. Proceeding to deploy to staging environment."
-
-                sshagent(['jenkins-staging-ssh-key']) {
-                    sh """
-                        ssh -o StrictHostKeyChecking=no ${env.STAGING_USERNAME}@${env.STAGING_REMOTE_HOST} '
-                        docker stop stagingbe || true &&
-                        docker rm stagingbe || true  &&
-                        docker image prune -af || true &&
-                        docker run -d -p ${env.STAGING_PORT}:2025 --name=stagingbe ${env.USERNAME}/grouponebe-${BUILD_NUMBER}:latest
-                        '
-                    """
-                }
-
+                echo "Build was successful. Check logs for details."
                 cleanWs()
             }           
         }
