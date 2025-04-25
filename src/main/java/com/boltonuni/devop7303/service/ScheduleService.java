@@ -176,4 +176,18 @@ public class ScheduleService {
             return schedules.stream().limit(2).collect(Collectors.toList());
         return schedules;
     }
+
+    public Response getPatientPrescription(String doctorEmail, String userId){
+        try {
+            User user = userService.findByEmail(doctorEmail);
+            if(user==null)
+                return new Response("Account does not exist", "99",null);
+            System.out.println("Doc id: "+user.getId());
+            List<Schedules> patientPrescription = schedulesRepo.getPatientPrescription(user.getId(), userId);
+            return new Response("Success", "00", patientPrescription);
+        }catch (Throwable th){
+            LOGGER.debug("getPatientPrescription>>",th);
+            return new Response("Error Occurred", "99", null);
+        }
+    }
 }
