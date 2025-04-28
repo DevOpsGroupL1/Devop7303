@@ -1,11 +1,14 @@
 package com.boltonuni.devop7303.controllers;
 
+import com.boltonuni.devop7303.entity.Role;
 import com.boltonuni.devop7303.entity.User;
+import com.boltonuni.devop7303.entity.UserRole;
 import com.boltonuni.devop7303.models.LoginRequest;
 import com.boltonuni.devop7303.models.Response;
 import com.boltonuni.devop7303.security.JwtTokenUtil;
 import com.boltonuni.devop7303.security.JwtUserDetailsService;
 import com.boltonuni.devop7303.service.ScheduleService;
+import com.boltonuni.devop7303.service.UserRoleService;
 import com.boltonuni.devop7303.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +41,8 @@ public class Token {
     UserService userObj;
     @Autowired
     ScheduleService scheduleService;
+    @Autowired
+    private UserRoleService userRoleService;
 
     @GetMapping(value = "test")
     public String test(){
@@ -54,9 +59,12 @@ public class Token {
             String token = jwtTokenUtil.generateToken(userDetails);
             final long expiry = jwtTokenUtil.getExpirationDateFromToken(token).getTime();
             User user = userObj.findByEmail(login.getEmail());
+            UserRole userRole = userRoleService.findByUserId(user.getId());
+            Role role = userRoleService.getRole(userRole.getRoleId());
             System.out.println("User.....");
             System.out.println(user.toString());
             user.setPassword(null);
+            user.setUserRole(role);
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
             response.put("expiry", expiry);
