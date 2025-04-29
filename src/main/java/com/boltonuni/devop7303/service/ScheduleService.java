@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -189,5 +190,11 @@ public class ScheduleService {
             LOGGER.debug("getPatientPrescription>>",th);
             return new Response("Error Occurred", "99", null);
         }
+    }
+
+    public Response upcoming(String email){
+        User user = userService.findByEmail(email);
+        List<Schedules> upcoming = loadUpcoming(user);
+        return new Response("Success", "00", upcoming==null?new ArrayList<>():upcoming);
     }
 }

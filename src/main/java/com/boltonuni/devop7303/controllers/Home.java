@@ -1,9 +1,6 @@
 package com.boltonuni.devop7303.controllers;
 
-import com.boltonuni.devop7303.entity.Role;
-import com.boltonuni.devop7303.entity.Schedules;
-import com.boltonuni.devop7303.entity.User;
-import com.boltonuni.devop7303.entity.UserRole;
+import com.boltonuni.devop7303.entity.*;
 import com.boltonuni.devop7303.models.Response;
 import com.boltonuni.devop7303.service.RoleService;
 import com.boltonuni.devop7303.service.ScheduleService;
@@ -111,6 +108,16 @@ public class Home {
         return new Response("Success", "00", new ArrayList<>());
     }
 
+    //Get patient's 2 upcoming prescriptions
+    @Operation(summary = "This endpoint allows a patient to mark dosage as taken")
+    @ApiResponses(value =
+            {@ApiResponse(
+                    responseCode = "00",
+                    description = "Success",
+                    content = { @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = User.class)
+                    ) }), @ApiResponse(responseCode = "99", description = "Error Occurred",content = @Content) })
     @PreAuthorize("hasAuthority('USER')")
     @PutMapping(value="dosage/{dosageId}/schedule/{schedId}")
     public Response tickDosage(@PathVariable int dosageId, @PathVariable String schedId){
@@ -119,6 +126,38 @@ public class Home {
         return scheduleService.updateDosageIntake(dosageId, schedId);
     }
 
+    //Get patient's 2 upcoming prescriptions
+    @Operation(summary = "Get patient's 2 upcoming prescriptions")
+    @ApiResponses(value =
+            {@ApiResponse(
+                    responseCode = "00",
+                    description = "Success",
+                    content = { @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = User.class)
+                    ) }), @ApiResponse(responseCode = "99", description = "Error Occurred",content = @Content) })
+    @PreAuthorize("hasAuthority('USER')")
+    @GetMapping(value="dosage/upcoming")
+    public Response upcoming(Principal principal){
+        return scheduleService.upcoming(principal.getName());
+    }
 
+    //Get Last dosage taken by patient
+    @Operation(summary = "Get Last dosage taken by patient")
+    @ApiResponses(value =
+            {@ApiResponse(
+                    responseCode = "00",
+                    description = "Success",
+                    content = { @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = User.class)
+                    ) }), @ApiResponse(responseCode = "99", description = "Error Occurred",content = @Content) })
+    @PreAuthorize("hasAuthority('USER')")
+    @GetMapping(value="dosage/lasttaken")
+    public Response lastTaken(Principal principal){
+        User user = userService.findByEmail(principal.getName());
+        Dosages dosages = scheduleService.getLastTakenDosage(user.getId());
+        return new Response("Success", "00", dosages);
+    }
 
 }
