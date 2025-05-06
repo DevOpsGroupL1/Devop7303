@@ -174,6 +174,17 @@ pipeline {
             }
         }
 
+	stage('Deploy to staging Approval') {
+            when {
+                expression {
+                    return branchName == 'staging'
+                }
+            }
+            steps {
+                input message: 'Approve Deployment to staging?'
+            }
+        }
+
         stage('Deploy to staging environment') {
             when {
                 expression {
