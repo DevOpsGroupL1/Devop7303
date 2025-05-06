@@ -143,7 +143,7 @@ public class ScheduleService {
             LOGGER.info("Before dosages 2:.................{}", userIntake);
             LOGGER.info("Before dosages 3:.................{}", userIntake.toString());
             DosageIntake intake = null;
-            if(userIntake==null)
+            if(userIntake!=null)
                 intake = new DosageIntake();
             intake.setDosageId(dosage.getId());
             intake.setUserId(schedules.getUserId());
