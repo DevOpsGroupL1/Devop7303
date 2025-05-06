@@ -27,8 +27,8 @@ public interface SchedulesRepo extends JpaRepository<Schedules, Integer> {
 
     List<Schedules> findSchedulesByUserAndStartDateGreaterThanEqual(User user, LocalDateTime startDate);
 
-    @Query(value = "SELECT s.* FROM schedules s JOIN dosages d ON d.schedule_id= s.id AND s.user_id =? AND d.taken = 0 AND DATE(d.intake_time) =?", nativeQuery = true)
-    List<Schedules> loadUpcomingDosage(@Param("userId") String userId, LocalDate date);
+    @Query(value = "SELECT s.* FROM schedules s JOIN dosages d ON d.schedule_id= s.id AND s.user_id = :userId AND d.taken = 0 AND DATE(d.intake_time) = :date", nativeQuery = true)
+    List<Schedules> loadUpcomingDosage(@Param("userId") String userId, @Param("date") LocalDate date);
 
     @Query(value="SELECT * from schedules where doctor_id = ? and user_id =?", nativeQuery = true)
     List<Schedules> getPatientPrescription(@Param("doctorId") String doctorId, @Param("userId") String userId);
