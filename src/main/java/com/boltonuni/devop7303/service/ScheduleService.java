@@ -177,6 +177,7 @@ public class ScheduleService {
 
     public List<Schedules> loadUpcoming(User user){
         List<Schedules> schedules = schedulesRepo.loadUpcomingDosage(user.getId(), LocalDate.now());
+        LOGGER.info("Upcoming schedules.........", schedules);
         if(schedules!=null && schedules.size()>2)
             return schedules.stream().limit(2).collect(Collectors.toList());
         return schedules;
