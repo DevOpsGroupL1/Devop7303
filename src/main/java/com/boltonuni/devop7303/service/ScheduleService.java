@@ -135,9 +135,13 @@ public class ScheduleService {
             if(dosages==null)
                 return new Response("Failed", "80", "Dosage not found");
 
+            LOGGER.info("Before dosages.................");
             dosages.setTaken(true);
             Dosages dosage = dosagesRepo.save(dosages);
+            LOGGER.info("Before dosages 1:.................{}", dosage);
             DosageIntake userIntake = dosageIntakeRepo.findDosageIntakeByUserId(schedules.getUserId());
+            LOGGER.info("Before dosages 2:.................{}", userIntake);
+            LOGGER.info("Before dosages 3:.................{}", userIntake.toString());
             DosageIntake intake = null;
             if(userIntake==null)
                 intake = new DosageIntake();
