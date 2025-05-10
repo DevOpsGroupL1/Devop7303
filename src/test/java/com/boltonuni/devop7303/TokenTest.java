@@ -1,8 +1,10 @@
 package com.boltonuni.devop7303;
 
 import com.boltonuni.devop7303.controllers.Token;
+import com.boltonuni.devop7303.entity.DosageIntake;
 import com.boltonuni.devop7303.entity.Dosages;
 import com.boltonuni.devop7303.entity.User;
+import com.boltonuni.devop7303.models.DosagesDTO;
 import com.boltonuni.devop7303.models.LoginRequest;
 import com.boltonuni.devop7303.models.Response;
 import com.boltonuni.devop7303.security.JwtTokenUtil;

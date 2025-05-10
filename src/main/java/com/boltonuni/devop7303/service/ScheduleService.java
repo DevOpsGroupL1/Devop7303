@@ -4,16 +4,20 @@ import com.boltonuni.devop7303.entity.DosageIntake;
 import com.boltonuni.devop7303.entity.Dosages;
 import com.boltonuni.devop7303.entity.Schedules;
 import com.boltonuni.devop7303.entity.User;
+import com.boltonuni.devop7303.models.DosagesDTO;
 import com.boltonuni.devop7303.models.Response;
 import com.boltonuni.devop7303.repository.DosageIntakeRepo;
 import com.boltonuni.devop7303.repository.DosagesRepo;
 import com.boltonuni.devop7303.repository.SchedulesRepo;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.io.DataInput;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -136,16 +140,16 @@ public class ScheduleService {
                 return new Response("Failed", "80", "Dosage not found");
 
             LOGGER.info("Before dosages.................");
-            dosages.setTaken(true);
+//            dosages.setTaken(true);
             Dosages dosage = dosagesRepo.save(dosages);
             LOGGER.info("Before dosages 1:.................{}", dosage);
-            DosageIntake userIntake = dosageIntakeRepo.findDosageIntakeByUserId(schedules.getUser().getId());
-            LOGGER.info("Before dosages 2:.................{}", userIntake);
+//            DosageIntake userIntake = dosageIntakeRepo.findDosageIntakeByUserId(schedules.getUser().getId());
+//            LOGGER.info("Before dosages 2:.................{}", userIntake);
 //            LOGGER.info("Before dosages 3:.................{}", userIntake.toString());
             DosageIntake intake = null;
-            if(userIntake==null)
+//            if(userIntake==null)
                 intake = new DosageIntake();
-            intake.setDosageId(dosage.getId());
+            intake.getDosage().setId(dosage.getId());
             intake.setUserId(schedules.getUser().getId());
             intake.setDateCreated(LocalDateTime.now());
             dosageIntakeRepo.save(intake);
@@ -160,11 +164,20 @@ public class ScheduleService {
     }
 
     public Dosages getLastTakenDosage(String userId){
-        DosageIntake lastDose = dosageIntakeRepo.findDosageIntakeByUserId(userId);
-        if(lastDose==null)
-            return null;
-        Dosages lastDosage = dosagesRepo.findById(lastDose.getDosageId()).orElse(null);
-        return lastDosage;
+        try {
+            DosageIntake lastDose = dosageIntakeRepo.findTop1ByUserIdOrderByDateCreatedDesc(userId);
+            LOGGER.info("last Dose {}", lastDose);
+            LOGGER.info("last Dose id {}", lastDose.getDosage().getId());
+            Dosages lastDosage = dosagesRepo.findById(lastDose.getDosage().getId()).orElse(null);
+//            ObjectMapper obj = new ObjectMapper();
+//            obj.registerModule(new JavaTimeModule());
+//            DosagesDTO dto = new ObjectMapper().readValue(obj.writeValueAsString(lastDosage), DosagesDTO.class);
+            LOGGER.info("last Dose<> {}", lastDosage);
+            return lastDosage;
+        }catch (Throwable e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public Response loadPatientHistory(String patientEmail){
@@ -177,7 +190,7 @@ public class ScheduleService {
 
     public List<Schedules> loadUpcoming(User user){
         List<Schedules> schedules = schedulesRepo.loadUpcomingDosage(user.getId(), LocalDate.now());
-        LOGGER.info("Upcoming schedules.........", schedules);
+        LOGGER.info("Upcoming schedules.........{}", schedules);
         if(schedules!=null && schedules.size()>2)
             return schedules.stream().limit(2).collect(Collectors.toList());
         return schedules;

@@ -20,6 +20,6 @@ public class DosageIntakeService {
 
     public void getUpcomingDosages(String userId){
         DosageIntake dosageIntake = getLastDosageTaken(userId);
-        dosagesRepo.findById(dosageIntake.getDosageId());
+        dosagesRepo.findById(dosageIntake.getDosage().getId());
     }
 }
