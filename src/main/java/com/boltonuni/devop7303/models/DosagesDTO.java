@@ -1,8 +1,8 @@
-package com.boltonuni.devop7303.entity;
+package com.boltonuni.devop7303.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.boltonuni.devop7303.entity.DosageIntake;
+import com.boltonuni.devop7303.entity.Schedules;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -10,16 +10,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Dosages {
+
+public class DosagesDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-//    @JsonBackReference
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "schedule_id", nullable = false, referencedColumnName = "id")
     private Schedules schedule;
     private String description;
     @NotNull(message = "Time of intake required")
@@ -27,11 +22,10 @@ public class Dosages {
     private LocalDateTime intakeTime;
     private String dosage;
     private boolean taken;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime dateCreated;
     private LocalDateTime remindAt;
     private String reminded;
-    @OneToMany(mappedBy = "dosage",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    @JoinColumn(name = "dosage_id", referencedColumnName = "id")
     private List<DosageIntake> datesTaken;
 
     public int getId() {
@@ -116,7 +110,7 @@ public class Dosages {
 
     @Override
     public String toString() {
-        return "Dosages{" +
+        return "DosagesDTO{" +
                 "id=" + id +
 //                ", schedule=" + schedule +
                 ", description='" + description + '\'' +

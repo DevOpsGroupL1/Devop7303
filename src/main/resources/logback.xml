@@ -65,6 +65,6 @@ See here for more details: http://gordondickens.com/wordpress/2013/03/27/sawing-
     <root level="ERROR">
         <!--        <appender-ref ref="FILE-AUDIT"/>-->
         <appender-ref ref="console"/>
-        <appender-ref ref="SYSLOG"/>
+<!--        <appender-ref ref="SYSLOG"/>-->
     </root>
 </configuration>

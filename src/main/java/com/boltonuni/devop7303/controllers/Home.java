@@ -1,11 +1,14 @@
 package com.boltonuni.devop7303.controllers;
 
 import com.boltonuni.devop7303.entity.*;
+import com.boltonuni.devop7303.models.DosagesDTO;
 import com.boltonuni.devop7303.models.Response;
 import com.boltonuni.devop7303.service.RoleService;
 import com.boltonuni.devop7303.service.ScheduleService;
 import com.boltonuni.devop7303.service.UserRoleService;
 import com.boltonuni.devop7303.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/v1/api/")
@@ -153,11 +157,11 @@ public class Home {
                             schema = @Schema(implementation = User.class)
                     ) }), @ApiResponse(responseCode = "99", description = "Error Occurred",content = @Content) })
     @PreAuthorize("hasAuthority('USER')")
-    @GetMapping(value="dosage/lasttaken")
-    public Response lastTaken(Principal principal){
+    @GetMapping(value="dosage/lasttaken", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Response lastTaken(Principal principal) throws JsonProcessingException {
         User user = userService.findByEmail(principal.getName());
-        Dosages dosages = scheduleService.getLastTakenDosage(user.getId());
-        return new Response("Success", "00", dosages);
+        Dosages dosageIntake = scheduleService.getLastTakenDosage(user.getId());
+        return new Response("Success", "00", dosageIntake);
     }
 
 }
