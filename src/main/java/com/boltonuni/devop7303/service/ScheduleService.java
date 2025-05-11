@@ -127,13 +127,13 @@ public class ScheduleService {
         try {
             Schedules schedules = schedulesRepo.findSchedulesById(schedId, dosageId);
             LOGGER.info("Schedules: ");
-            LOGGER.info(schedules.toString());
+//            LOGGER.info(schedules.toString());
 
 
             System.out.println(schedules.getDosages().size());
-            Dosages dosages = schedules.getDosages().stream().filter((dose)->dose.getId()==dosageId).collect(Collectors.toList()).get(0);
+            Dosages dosages = schedules.getDosages().stream().filter((dose)->dose.getId()==dosageId).collect(Collectors.toList()).stream().findFirst().orElse(null);
             LOGGER.info("DOsages: ");
-            LOGGER.info(dosages.toString());
+            LOGGER.info("{}",dosages==null);
 
 
             if(dosages==null)
@@ -141,15 +141,15 @@ public class ScheduleService {
 
             LOGGER.info("Before dosages.................");
 //            dosages.setTaken(true);
-            Dosages dosage = dosagesRepo.save(dosages);
-            LOGGER.info("Before dosages 1:.................{}", dosage);
+//            Dosages dosage = dosagesRepo.save(dosages);
+//            LOGGER.info("Before dosages 1:.................{}", dosage);
 //            DosageIntake userIntake = dosageIntakeRepo.findDosageIntakeByUserId(schedules.getUser().getId());
 //            LOGGER.info("Before dosages 2:.................{}", userIntake);
 //            LOGGER.info("Before dosages 3:.................{}", userIntake.toString());
             DosageIntake intake = null;
 //            if(userIntake==null)
                 intake = new DosageIntake();
-            intake.getDosage().setId(dosage.getId());
+            intake.setDosage(dosages);
             intake.setUserId(schedules.getUser().getId());
             intake.setDateCreated(LocalDateTime.now());
             dosageIntakeRepo.save(intake);
