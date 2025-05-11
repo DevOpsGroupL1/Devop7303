@@ -1,7 +1,6 @@
 package com.boltonuni.devop7303.controllers;
 
 import com.boltonuni.devop7303.entity.*;
-import com.boltonuni.devop7303.models.DosagesDTO;
 import com.boltonuni.devop7303.models.Response;
 import com.boltonuni.devop7303.service.RoleService;
 import com.boltonuni.devop7303.service.ScheduleService;

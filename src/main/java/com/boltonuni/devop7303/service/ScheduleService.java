@@ -188,8 +188,8 @@ public class ScheduleService {
         return response;
     }
 
-    public List<Schedules> loadUpcoming(User user){
-        List<Schedules> schedules = schedulesRepo.loadUpcomingDosage(user.getId(), LocalDate.now());
+    public List<Dosages> loadUpcoming(User user){
+        List<Dosages> schedules = dosagesRepo.loadUpcomingDosage(user.getId(), LocalDate.now());
         LOGGER.info("Upcoming schedules.........{}", schedules);
         if(schedules!=null && schedules.size()>2)
             return schedules.stream().limit(2).collect(Collectors.toList());
@@ -212,7 +212,7 @@ public class ScheduleService {
 
     public Response upcoming(String email){
         User user = userService.findByEmail(email);
-        List<Schedules> upcoming = loadUpcoming(user);
+        List<Dosages> upcoming = loadUpcoming(user);
         return new Response("Success", "00", upcoming==null?new ArrayList<>():upcoming);
     }
 }
