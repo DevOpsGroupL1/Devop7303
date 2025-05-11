@@ -20,6 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -122,11 +123,12 @@ public class Home {
                             schema = @Schema(implementation = User.class)
                     ) }), @ApiResponse(responseCode = "99", description = "Error Occurred",content = @Content) })
     @PreAuthorize("hasAuthority('USER')")
-    @PutMapping(value="dosage/{dosageId}/schedule/{schedId}")
-    public Response tickDosage(@PathVariable int dosageId, @PathVariable String schedId){
+    @PutMapping(value="dosage/{dosageId}/schedule/{schedId}/dateTaken/{dateTaken}")
+    public Response tickDosage(@PathVariable int dosageId, @PathVariable String schedId, @PathVariable LocalDateTime dateTaken){
         System.out.println("Dosage: "+dosageId);
         System.out.println("Schedule: "+schedId);
-        return scheduleService.updateDosageIntake(dosageId, schedId);
+        System.out.println("date: "+dateTaken);
+        return scheduleService.updateDosageIntake(dosageId, schedId, dateTaken);
     }
 
     //Get patient's 2 upcoming prescriptions
