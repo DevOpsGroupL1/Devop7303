@@ -123,7 +123,7 @@ public class ScheduleService {
         }
     }
 
-    public Response updateDosageIntake(int dosageId, String schedId){
+    public Response updateDosageIntake(int dosageId, String schedId,LocalDateTime date){
         try {
             Schedules schedules = schedulesRepo.findSchedulesById(schedId, dosageId);
             LOGGER.info("Schedules: ");
@@ -151,7 +151,7 @@ public class ScheduleService {
                 intake = new DosageIntake();
             intake.setDosage(dosages);
             intake.setUserId(schedules.getUser().getId());
-            intake.setDateCreated(LocalDateTime.now());
+            intake.setDateCreated(date);
             dosageIntakeRepo.save(intake);
 
             return new Response("Success", "00", "Dosage have been updated.");
