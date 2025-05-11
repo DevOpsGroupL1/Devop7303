@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface DosageIntakeRepo extends JpaRepository<DosageIntake, Integer> {
     DosageIntake findDosageIntakeByUserId(String userId);
-    DosageIntake findTop1ByUserIdOrderByDateCreatedDesc(String userId);
+    DosageIntake findTop1ByUserIdOrderByIdDesc(String userId);
 }

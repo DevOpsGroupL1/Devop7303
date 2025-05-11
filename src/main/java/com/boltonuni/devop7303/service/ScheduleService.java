@@ -165,7 +165,7 @@ public class ScheduleService {
 
     public Dosages getLastTakenDosage(String userId){
         try {
-            DosageIntake lastDose = dosageIntakeRepo.findTop1ByUserIdOrderByDateCreatedDesc(userId);
+            DosageIntake lastDose = dosageIntakeRepo.findTop1ByUserIdOrderByIdDesc(userId);
             LOGGER.info("last Dose {}", lastDose);
             LOGGER.info("last Dose id {}", lastDose.getDosage().getId());
             Dosages lastDosage = dosagesRepo.findById(lastDose.getDosage().getId()).orElse(null);
